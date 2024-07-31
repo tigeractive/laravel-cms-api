@@ -2,12 +2,12 @@
 
 namespace App\common\service;
 
-use App\common\model\mysql\Users as UsersModel;
+use App\common\model\mysql\UsersModel as UsersModel;
 use App\Helpers\Common;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-class Users extends BaseService
+class UsersService extends BaseService
 {
     public $model = null;
 

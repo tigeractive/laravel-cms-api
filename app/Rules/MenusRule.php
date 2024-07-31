@@ -3,7 +3,7 @@
 namespace App\Rules;
 
 use App\common\service\MenusService;
-use App\common\service\Roles;
+use App\common\service\RolesService;
 use Illuminate\Support\Facades\Validator;
 
 class MenusRule

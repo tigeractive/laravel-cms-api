@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\common\service\Roles;
+use App\common\service\RolesService;
 use Illuminate\Support\Facades\Validator;
 
 class RolesRule
@@ -11,7 +11,7 @@ class RolesRule
     {
         Validator::extend('role_unique', function ($attribute, $value, $parameters, $validator) {
             // 检查值是否包含 'admin'
-            $result = Roles::getInstance()->isUniqueRoleName($value, request()->input('role_id'));
+            $result = RolesService::getInstance()->isUniqueRoleName($value, request()->input('role_id'));
             if ($result) {
                 return false;
             }

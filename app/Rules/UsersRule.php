@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\common\service\Users;
+use App\common\service\UsersService;
 use Illuminate\Support\Facades\Validator;
 
 class UsersRule
@@ -11,7 +11,7 @@ class UsersRule
     {
         Validator::extend('update_unique', function ($attribute, $value, $parameters, $validator) {
             // 检查值是否包含 'admin'
-            $result = Users::getInstance()->isUniqueUserName($value, request()->input('user_id'));
+            $result = UsersService::getInstance()->isUniqueUserName($value, request()->input('user_id'));
             if ($result) {
                 return false;
             }

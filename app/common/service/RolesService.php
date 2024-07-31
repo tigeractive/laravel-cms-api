@@ -2,10 +2,10 @@
 
 namespace App\common\service;
 
-use App\common\model\mysql\Roles as RolesModel;
+use App\common\model\mysql\RolesModel as RolesModel;
 use Illuminate\Support\Facades\DB;
 
-class Roles extends BaseService
+class RolesService extends BaseService
 {
     public $model = null;
 

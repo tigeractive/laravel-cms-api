@@ -39,6 +39,7 @@ Route::group([
 
     // 菜单
     Route::get('/menus/list', [MenusController::class, 'list']);
+    Route::get('/menus/parent-list', [MenusController::class, 'parentList']);
     Route::post('/menus/operate', [MenusController::class, 'operate']);
     Route::post('/menus/del', [MenusController::class, 'del']);
 

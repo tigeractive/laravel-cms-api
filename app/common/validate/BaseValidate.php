@@ -3,22 +3,21 @@
 namespace App\common\validate;
 
 use App\Exceptions\ParameterException;
+use App\Helpers\Common;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 
 class BaseValidate extends Validator
 {
     protected $rule = [
-        'a' => 'required|date',
-        'b' => 'required'
+
     ];
 
     protected $message = [
-        'a.required' => 'a必须要有值'
+
     ];
 
     protected $scene = [
-        'add' => ['a.required|a.date', 'b']
     ];
 
     protected $currentScene = null;
@@ -83,6 +82,8 @@ class BaseValidate extends Validator
                         foreach ($val as $k => $v) {
                             if (strpos($v, '.') !== false) {
                                 $this->assembleRule($v);
+                            } else {
+                                $this->currentRule[$v] = $this->rule[$v];
                             }
                         }
                     } else if (strpos($val, '.') !== false) {
@@ -100,7 +101,8 @@ class BaseValidate extends Validator
         }
 
         $request = Request::instance();
-        $validator = Validator::make($request->toArray(), $this->currentRule, $this->message);
+        $request = Common::trimArr($request->toArray());
+        $validator = Validator::make($request, $this->currentRule, $this->message);
         if ($validator->fails()) {
             $errors = collect($validator->errors())->map(function ($error) {
                 return $error[0];

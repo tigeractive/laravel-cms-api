@@ -3,11 +3,10 @@
 namespace App\Http\Admin;
 
 use App\CodeResponse;
-use App\common\model\mysql\Users;
-use App\common\model\mysql\Users as UsersModel;
+use App\common\model\mysql\UsersModel;
 use App\common\service\AdminToken;
-use App\common\service\Users as UsersSerive;
-use App\common\validate\Users as UsersValidate;
+use App\common\service\UsersService as UsersSerive;
+use App\common\validate\UsersValidate as UsersValidate;
 use App\Helpers\Common;
 use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Log;
@@ -26,11 +25,11 @@ class UsersController extends BaseController
         // 判断用户是否存在
         $user = (UsersSerive::getInstance())->getUserByName($request::input('username'));
         if (empty($user)) {
-            return Common::codeReturn(CodeResponse::LOGINERROR);
+            return Common::show(CodeResponse::LOGINERROR);
         }
         // 判断密码是否正确
         if ($user->password != Common::packagePassword($request::input('password'))) {
-            return Common::codeReturn(CodeResponse::LOGINERROR);
+            return Common::show(CodeResponse::LOGINERROR);
         }
 
         $user = $user->toArray();
@@ -48,7 +47,7 @@ class UsersController extends BaseController
             'token' => $token->toString()
         ];
 
-        return Common::codeReturn(CodeResponse::SUCCESS, $data);
+        return Common::show(CodeResponse::SUCCESS, $data);
     }
 
     public function getToken()
@@ -60,7 +59,7 @@ class UsersController extends BaseController
     {
         $params = $request::input();
         $result = (new UsersSerive())->getUserList($params);
-        return Common::codeReturn(CodeResponse::SUCCESS, $result);
+        return Common::show(CodeResponse::SUCCESS, $result);
     }
 
     public function getPermissionList(Request $request)
@@ -70,12 +69,13 @@ class UsersController extends BaseController
             "actionList" => $request::input('actionList')
         ];
 
-        return Common::codeReturn(CodeResponse::SUCCESS, $data);
+        return Common::show(CodeResponse::SUCCESS, $data);
     }
 
     public function operate(Request $request)
     {
         $data = $request::input();
+        $data = Common::trimArr($data);
         if (isset($data['action'])) {
             if ($data['action'] == CodeResponse::ADD) {
                 return $this->add($data);
@@ -92,10 +92,10 @@ class UsersController extends BaseController
         $data = Common::filterArr($data);
         $result = UsersSerive::getInstance()->add($data);
         if ($result) {
-            return Common::codeReturn(CodeResponse::USERADDSUCCESS);
+            return Common::show(CodeResponse::USERADDSUCCESS);
         }
 
-        return Common::codeReturn(CodeResponse::USERADDFAIL);
+        return Common::show(CodeResponse::USERADDFAIL);
     }
 
     protected function edit($data)
@@ -103,10 +103,10 @@ class UsersController extends BaseController
         (new UsersValidate())->goCheck('edit');
         $result = UsersSerive::getInstance()->edit($data);
         if ($result) {
-            return Common::codeReturn(CodeResponse::USEREDITSUCCESS);
+            return Common::show(CodeResponse::USEREDITSUCCESS);
         }
 
-        return Common::codeReturn(CodeResponse::USEREDITFAIL);
+        return Common::show(CodeResponse::USEREDITFAIL);
     }
 
     // 单个/批量删除 硬删除
@@ -115,14 +115,14 @@ class UsersController extends BaseController
         $data = $request::input();
         if (!empty($data['user_id'])) {
             if ($data['user_id'] == 1) {
-                return Common::codeReturn(CodeResponse::USERDELFAIL);
+                return Common::show(CodeResponse::USERDELFAIL);
             }
             $result = (new UsersModel())->del($data);
             if ($result) {
-                return Common::codeReturn(CodeResponse::USERDELSUCCESS);
+                return Common::show(CodeResponse::USERDELSUCCESS);
             }
 
-            return Common::codeReturn(CodeResponse::USERDELFAIL);
+            return Common::show(CodeResponse::USERDELFAIL);
         }
     }
 

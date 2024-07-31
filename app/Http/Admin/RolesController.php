@@ -3,9 +3,8 @@
 namespace App\Http\Admin;
 
 use App\CodeResponse;
-use App\common\service\Roles;
-use App\common\service\Roles as RolesService;
-use App\common\validate\Roles as RolesValidate;
+use App\common\service\RolesService;
+use App\common\validate\RolesValidate as RolesValidate;
 use App\Helpers\Common;
 use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Request;
@@ -18,7 +17,7 @@ class RolesController extends BaseController
         $params = $request::input();
         $list = RolesService::getInstance()->list($params);
 
-        return Common::codeReturn(CodeResponse::SUCCESS, $list);
+        return Common::show(CodeResponse::SUCCESS, $list);
     }
 
     // 获取所有角色
@@ -26,13 +25,14 @@ class RolesController extends BaseController
     {
         $list = RolesService::getInstance()->getAllRoles();
 
-        return Common::codeReturn(CodeResponse::SUCCESS, $list);
+        return Common::show(CodeResponse::SUCCESS, $list);
     }
 
     // 角色添加、编辑
     public function operate(Request $request)
     {
         $params = $request::input();
+        $params = Common::trimArr($params);
         if ($params['action'] == CodeResponse::ADD) {
             $params = $request::input('filterData');
             return $this->add($params);
@@ -46,9 +46,9 @@ class RolesController extends BaseController
         (new RolesValidate())->goCheck('add');
         $result = RolesService::getInstance()->add($params);
         if ($result) {
-            return Common::codeReturn(CodeResponse::ROLESADDSUCCESS);
+            return Common::show(CodeResponse::ROLESADDSUCCESS);
         }
-        return Common::codeReturn(CodeResponse::ROLESADDFAIL);
+        return Common::show(CodeResponse::ROLESADDFAIL);
     }
 
     protected function edit($params)
@@ -56,9 +56,9 @@ class RolesController extends BaseController
         (new RolesValidate())->goCheck('edit');
         $result = RolesService::getInstance()->edit($params);
         if ($result) {
-            return Common::codeReturn(CodeResponse::ROLESEDITSUCCESS);
+            return Common::show(CodeResponse::ROLESEDITSUCCESS);
         }
-        return Common::codeReturn(CodeResponse::ROLESEDITFAIL);
+        return Common::show(CodeResponse::ROLESEDITFAIL);
     }
 
     // 删除
@@ -69,14 +69,14 @@ class RolesController extends BaseController
         if (!empty($params['role_id'])) {
             // 超级管理员角色不能删除
             if ($params['role_id'] == 1) {
-                return Common::codeReturn(CodeResponse::ROLESSUPERDELETEFAIL);
+                return Common::show(CodeResponse::ROLESSUPERDELETEFAIL);
             }
             $result = RolesService::getInstance()->del($params['role_id']);
             if ($result) {
-                return Common::codeReturn(CodeResponse::ROLESDELETESUCCESS);
+                return Common::show(CodeResponse::ROLESDELETESUCCESS);
             }
 
-            return Common::codeReturn(CodeResponse::ROLESDELETEFAIL);
+            return Common::show(CodeResponse::ROLESDELETEFAIL);
         }
     }
 
@@ -86,10 +86,10 @@ class RolesController extends BaseController
         $data = $request::input();
         $result = RolesService::getInstance()->updatePermission($data);
         if ($result) {
-            return Common::codeReturn(CodeResponse::ROLESPERMISSIONSUCCESS);
+            return Common::show(CodeResponse::ROLESPERMISSIONSUCCESS);
         }
 
-        return Common::codeReturn(CodeResponse::ROLESPERMISSIONFAIL);
+        return Common::show(CodeResponse::ROLESPERMISSIONFAIL);
     }
 
 }

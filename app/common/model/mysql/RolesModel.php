@@ -4,12 +4,14 @@ namespace App\common\model\mysql;
 
 use App\Helpers\Common;
 
-class Roles extends BaseModel
+class RolesModel extends BaseModel
 {
+    protected $table = 'roles';
+
     protected $primaryKey = 'role_id';
 
     protected $fillable = ['role_name', 'remark'];
-    
+
     public function getMenuIdListAttribute($value)
     {
         return array_filter(explode(',', $value));

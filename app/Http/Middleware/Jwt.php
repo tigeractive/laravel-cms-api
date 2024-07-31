@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use App\common\service\AdminToken;
 use App\common\service\MenusService as MenusService;
-use App\common\service\Roles as RolesService;
-use App\common\service\Users as UsersService;
+use App\common\service\RolesService as RolesService;
+use App\common\service\UsersService as UsersService;
 use App\Exceptions\PrivilegeException;
 use App\Exceptions\TokenException;
 use App\Exceptions\TokenExpireException;

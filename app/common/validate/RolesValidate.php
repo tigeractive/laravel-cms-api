@@ -2,7 +2,7 @@
 
 namespace App\common\validate;
 
-class Roles extends BaseValidate
+class RolesValidate extends BaseValidate
 {
     protected $rule = [
         'role_name' => 'required|unique:roles',

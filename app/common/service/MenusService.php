@@ -3,6 +3,7 @@
 namespace App\common\service;
 
 use App\common\model\mysql\MenusModel as MenusModel;
+use App\Exceptions\MenuParentException;
 use App\Helpers\Common;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -52,6 +53,13 @@ class MenusService extends BaseService
         return $list;
     }
 
+    public function getAllMenuList()
+    {
+        $list = $this->model->getMenuList()->toArray();
+        // 将组织的数据进行处理，子类在父类下面
+        return Common::unlimitedForLayer($list, 'children', 'menu_id');
+    }
+
     public function add($data)
     {
         if (!empty($data['parent_id_list'])) {
@@ -70,6 +78,9 @@ class MenusService extends BaseService
     {
         if (!empty($data['parent_id_list'])) {
             $parentIdArr = $data['parent_id_list'];
+            if (in_array($data['menu_id'], $parentIdArr)) {
+                throw new MenuParentException();
+            }
             $data['parent_id'] = $parentIdArr[count($parentIdArr) - 1];
             $data['parent_id_list'] = implode(',', $data['parent_id_list']);
         } else {
@@ -84,7 +95,7 @@ class MenusService extends BaseService
         $menu->component = $data['component'] ?? '';
         $menu->url = $data['url'] ?? '';
         $menu->menu_code = $data['menu_code'] ?? '';
-        $menu->menu_state = $data['menu_state'] ?? '';
+        $menu->menu_state = $data['menu_state'] ?? 1;
         $menu->parent_id_list = $data['parent_id_list'] ?? '';
         $menu->parent_id = $data['parent_id'] ?? 0;
         $menu->sort_id = $data['sort_id'] ?? 0;

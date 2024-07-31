@@ -30,10 +30,15 @@ class MenusModel extends BaseModel
 
     protected $hidden = ['create_time', 'update_time'];
 
-    public function getMenuList($where)
+    public function getMenuList($where = '')
     {
-        return self::query()->where($where)
-            ->orderBy('sort_id', 'DESC')
+        if (!empty($where)) {
+            return self::query()->where($where)
+                ->orderBy('sort_id', 'DESC')
+                ->get();
+        }
+
+        return self::query()->orderBy('sort_id', 'DESC')
             ->get();
     }
 }

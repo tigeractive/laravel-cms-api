@@ -2,7 +2,7 @@
 
 namespace App\common\validate;
 
-class Users extends BaseValidate
+class UsersValidate extends BaseValidate
 {
     protected $rule = [
         'username' => 'required|unique:users',

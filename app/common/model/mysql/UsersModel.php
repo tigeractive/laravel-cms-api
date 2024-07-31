@@ -6,8 +6,9 @@ use App\Helpers\Common;
 use Illuminate\Support\Facades\Log;
 use Nette\Utils\DateTime;
 
-class Users extends BaseModel
+class UsersModel extends BaseModel
 {
+    protected $table = 'users';
 
     protected $primaryKey = 'user_id';
 
