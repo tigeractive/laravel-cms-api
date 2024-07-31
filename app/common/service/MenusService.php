@@ -47,8 +47,17 @@ class MenusService extends BaseService
             }
             return $v;
         }, $list);
+
+        if (!empty($params['menu_name'])) {
+            return $list;
+        }
+
+        if (!empty($params['menu_state']) && $params['menu_state'] == 2) {
+            return $list;
+        }
+
         // 将组织的数据进行处理，子类在父类下面
-        $list = empty($params['menu_name']) ? Common::unlimitedForLayer($list, 'children', 'menu_id') : $list;
+        return Common::unlimitedForLayer($list, 'children', 'menu_id');
 
         return $list;
     }
