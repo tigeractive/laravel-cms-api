@@ -41,7 +41,7 @@ class UsersService extends BaseService
         }
 
         // 隐藏超级管理员
-        $where[] = ['user_id', '<>', 1];
+//        $where[] = ['user_id', '<>', 1];
         $list = $this->model->getUserList($where);
         $total = $this->model::query()->where($where)->count();
         if (empty($list)) {

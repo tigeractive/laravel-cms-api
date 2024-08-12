@@ -28,7 +28,7 @@ class UsersController extends BaseController
             return Common::show(CodeResponse::LOGINERROR);
         }
         // 判断密码是否正确
-        if ($user->password != Common::packagePassword($request::input('password'))) {
+        if (!password_verify($request::input('password'), $user->password)) {
             return Common::show(CodeResponse::LOGINERROR);
         }
 

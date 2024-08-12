@@ -23,7 +23,8 @@ class Common
 
     public static function packagePassword($password)
     {
-        return sha1(sha1($password) . CodeResponse::PWDSALT);
+        return password_hash($password, PASSWORD_DEFAULT, ['cost' => 10]);
+//        return sha1(sha1($password) . CodeResponse::PWDSALT);
     }
 
     public static function show(array $codeResponse, $data = null): \Illuminate\Http\JsonResponse
