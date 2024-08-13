@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Jwt;
+use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -22,7 +23,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        'cors' => \App\Http\Middleware\CorsMiddleware::class
+        'cors' => \App\Http\Middleware\CorsMiddleware::class,
+        'locale' => LocaleMiddleware::class
     ];
 
     /**

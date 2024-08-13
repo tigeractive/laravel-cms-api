@@ -25,11 +25,11 @@ class UsersController extends BaseController
         // 判断用户是否存在
         $user = (UsersSerive::getInstance())->getUserByName($request::input('username'));
         if (empty($user)) {
-            return Common::show(CodeResponse::LOGINERROR);
+            return Common::show(CodeResponse::LOGINERROR, trans('messages.LoginError'));
         }
         // 判断密码是否正确
         if (!password_verify($request::input('password'), $user->password)) {
-            return Common::show(CodeResponse::LOGINERROR);
+            return Common::show(CodeResponse::LOGINERROR, trans('messages.LoginError'));
         }
 
         $user = $user->toArray();
@@ -50,16 +50,11 @@ class UsersController extends BaseController
         return Common::show(CodeResponse::SUCCESS, $data);
     }
 
-    public function getToken()
-    {
-        return AdminToken::getInstance()->generateToken('user_id', '1', '+300 hour')->toString();
-    }
-
     public function list(Request $request)
     {
         $params = $request::input();
         $result = (new UsersSerive())->getUserList($params);
-        return Common::show(CodeResponse::SUCCESS, $result);
+        return Common::show(CodeResponse::SUCCESS, '', $result);
     }
 
     public function getPermissionList(Request $request)
@@ -69,7 +64,7 @@ class UsersController extends BaseController
             "actionList" => $request::input('actionList')
         ];
 
-        return Common::show(CodeResponse::SUCCESS, $data);
+        return Common::show(CodeResponse::SUCCESS, '',  $data);
     }
 
     public function operate(Request $request)
@@ -92,10 +87,10 @@ class UsersController extends BaseController
         $data = Common::filterArr($data);
         $result = UsersSerive::getInstance()->add($data);
         if ($result) {
-            return Common::show(CodeResponse::USERADDSUCCESS);
+            return Common::show(CodeResponse::USERADDSUCCESS, trans('messages.UserAddSuccess'));
         }
 
-        return Common::show(CodeResponse::USERADDFAIL);
+        return Common::show(CodeResponse::USERADDFAIL, trans('messages.UserAddFail'));
     }
 
     protected function edit($data)
@@ -103,10 +98,10 @@ class UsersController extends BaseController
         (new UsersValidate())->goCheck('edit');
         $result = UsersSerive::getInstance()->edit($data);
         if ($result) {
-            return Common::show(CodeResponse::USEREDITSUCCESS);
+            return Common::show(CodeResponse::USEREDITSUCCESS, trans('messages.UserEditSuccess'));
         }
 
-        return Common::show(CodeResponse::USEREDITFAIL);
+        return Common::show(CodeResponse::USEREDITFAIL, trans('messages.UserEditFail'));
     }
 
     // 单个/批量删除 硬删除
@@ -115,14 +110,14 @@ class UsersController extends BaseController
         $data = $request::input();
         if (!empty($data['user_id'])) {
             if ($data['user_id'] == 1) {
-                return Common::show(CodeResponse::USERDELFAIL);
+                return Common::show(CodeResponse::USERDELFAIL, trans('messages.UserDelFail'));
             }
             $result = (new UsersModel())->del($data);
             if ($result) {
-                return Common::show(CodeResponse::USERDELSUCCESS);
+                return Common::show(CodeResponse::USERDELSUCCESS, trans('messages.UserDelSuccess'));
             }
 
-            return Common::show(CodeResponse::USERDELFAIL);
+            return Common::show(CodeResponse::USERDELFAIL, trans('messages.UserDelFail'));
         }
     }
 

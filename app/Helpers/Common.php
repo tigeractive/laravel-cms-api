@@ -27,9 +27,9 @@ class Common
 //        return sha1(sha1($password) . CodeResponse::PWDSALT);
     }
 
-    public static function show(array $codeResponse, $data = null): \Illuminate\Http\JsonResponse
+    public static function show(array $codeResponse, $msg ='', $data = null): \Illuminate\Http\JsonResponse
     {
-        $result = ['msg' => $codeResponse['msg'], 'code' => $codeResponse['code']];
+        $result = ['msg' => $msg, 'code' => $codeResponse['code']];
         if (!is_null($data)) {
             if (is_array($data)) {
                 $data = array_filter($data, function ($item) {

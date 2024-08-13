@@ -19,13 +19,13 @@ class MenusController extends BaseController
     {
         $params = Request::input();
         $list = MenusService::getInstance()->getMenuList($params);
-        return Common::show(CodeResponse::SUCCESS, $list);
+        return Common::show(CodeResponse::SUCCESS, '', $list);
     }
 
     public function parentList()
     {
         $list = MenusService::getInstance()->getAllMenuList();
-        return Common::show(CodeResponse::SUCCESS, $list);
+        return Common::show(CodeResponse::SUCCESS, '', $list);
     }
 
     public function operate(Request $request)
@@ -44,19 +44,19 @@ class MenusController extends BaseController
     {
         $result = MenusService::getInstance()->add($data);
         if ($result) {
-            return Common::show(CodeResponse::MENUSADDSUCCESS);
+            return Common::show(CodeResponse::MENUSADDSUCCESS, trans('messages.MenusAddSuccess'));
         }
 
-        return Common::show(CodeResponse::MENUSADDFAIL);
+        return Common::show(CodeResponse::MENUSADDFAIL, trans('messages.MenusAddFail'));
     }
 
     protected function edit($data)
     {
         $result = MenusService::getInstance()->edit($data);
         if ($result) {
-            return Common::show(CodeResponse::MENUSEDITSUCCESS);
+            return Common::show(CodeResponse::MENUSEDITSUCCESS, trans('messages.MenusEditSuccess'));
         }
-        return Common::show(CodeResponse::MENUSEDITFAIL);
+        return Common::show(CodeResponse::MENUSEDITFAIL, trans('messages.MenusEditFail'));
     }
 
     // 删除
@@ -73,9 +73,9 @@ class MenusController extends BaseController
                 // 如果没有异常，则提交事务
                 DB::commit();
                 if ($result) {
-                    return Common::show(CodeResponse::MENUSDELSUCCESS);
+                    return Common::show(CodeResponse::MENUSDELSUCCESS, trans('messages.MenusDelSuccess'));
                 }
-                return Common::show(CodeResponse::MENUSDELFAIL);
+                return Common::show(CodeResponse::MENUSDELFAIL, trans('messages.MenusDelFail'));
             } catch (\Exception $e) {
                 // 如果捕获到异常，则回滚事务
                 DB::rollBack();
